@@ -1,0 +1,32 @@
+FUNCTION ZCM_ATTACH_UPLOAD.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     VALUE(UUID) TYPE  SYSUUID_C OPTIONAL
+*"----------------------------------------------------------------------
+
+
+
+  DATA: LS_OUT TYPE ZCM_ATTACHMENT_LIST.
+  GV_FCAT_STR = 'ZCM_ATTACHMENT_LIST'.
+  GV_FUNCTION = GC_UP.
+
+  GV_GLOBE_UUID = UUID.
+
+  SELECT * FROM ZCMT0007
+    INTO CORRESPONDING FIELDS OF TABLE GT_GLOBE_TABLE
+    WHERE UUID = GV_GLOBE_UUID
+    .
+
+  LOOP AT GT_GLOBE_TABLE INTO LS_OUT.
+    LS_OUT-ICONNAME = ICON_EXPORT.
+    MODIFY GT_GLOBE_TABLE FROM LS_OUT.
+    CLEAR:LS_OUT.
+  ENDLOOP.
+
+  CALL SCREEN G_SCRN STARTING AT 20 3
+        ENDING AT 110 15.
+
+
+
+ENDFUNCTION.

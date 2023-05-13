@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AREAT>Call Background Program Function</AREAT>
+   <INCLUDES>
+    <SOBJ_NAME>LZFGCM02TOP</SOBJ_NAME>
+    <SOBJ_NAME>SAPLZFGCM02</SOBJ_NAME>
+   </INCLUDES>
+   <FUNCTIONS>
+    <item>
+     <FUNCNAME>ZCM_CALL_BGP</FUNCNAME>
+     <SHORT_TEXT>Running background program</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>IS_BKPARA</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>ZCM_IN_CALL_BGP</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>UUID</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>SYSUUID_C</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>RECALL</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>CHAR1</TYP>
+      </RSIMP>
+     </IMPORT>
+     <TABLES>
+      <RSTBL>
+       <PARAMETER>IT_RSPARAMS</PARAMETER>
+       <DBSTRUCT>RSPARAMS</DBSTRUCT>
+      </RSTBL>
+     </TABLES>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>IS_BKPARA</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Call Background Program Input Structure</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>UUID</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>UUID in character form</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>RECALL</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Single-Character Flag</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>IT_RSPARAMS</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>ABAP: General Structure for PARAMETERS and SELECT-OPTIONS</STEXT>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+   </FUNCTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

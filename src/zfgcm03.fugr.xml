@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AREAT>Email Send Function</AREAT>
+   <INCLUDES>
+    <SOBJ_NAME>LZFGCM03F01</SOBJ_NAME>
+    <SOBJ_NAME>LZFGCM03F02</SOBJ_NAME>
+    <SOBJ_NAME>LZFGCM03TOP</SOBJ_NAME>
+    <SOBJ_NAME>SAPLZFGCM03</SOBJ_NAME>
+   </INCLUDES>
+   <FUNCTIONS>
+    <item>
+     <FUNCNAME>ZCM_SEND_MAIL</FUNCNAME>
+     <SHORT_TEXT>Standard Sendmail Function</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>I_CONF</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>ZCM_SENDMAIL_IMPORT</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>IT_MESSAGE_BODY</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>BCSY_TEXT</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>IT_ATTACHMENTS</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <REFERENCE>X</REFERENCE>
+       <TYP>RMPS_T_POST_CONTENT</TYP>
+      </RSIMP>
+     </IMPORT>
+     <EXPORT>
+      <RSEXP>
+       <PARAMETER>E_RESULT</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>BOOLEAN</TYP>
+      </RSEXP>
+     </EXPORT>
+     <TABLES>
+      <RSTBL>
+       <PARAMETER>RECIPIENTS</PARAMETER>
+       <DBSTRUCT>ADR6</DBSTRUCT>
+      </RSTBL>
+     </TABLES>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>I_CONF</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Mail Send Address Parameter</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>IT_MESSAGE_BODY</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Text Table</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>IT_ATTACHMENTS</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Transfer Table of Incoming Post Contents</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>E_RESULT</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Boolean Variable (X=true, -=false, space=unknown)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>RECIPIENTS</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>E-Mail Addresses (Business Address Services)</STEXT>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+    <item>
+     <FUNCNAME>ZCM_SEND_MAIL_IT2HTML</FUNCNAME>
+     <SHORT_TEXT>itable change html</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>IT_W3HEAD</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>ZCM_SEND_MAIL_W3HEAD_TY</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>IS_TABLE_HEAD</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>W3HEAD</TYP>
+      </RSIMP>
+     </IMPORT>
+     <TABLES>
+      <RSTBL>
+       <PARAMETER>ET_HTML</PARAMETER>
+       <DBSTRUCT>W3HTML</DBSTRUCT>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>IT_TABLE</PARAMETER>
+      </RSTBL>
+     </TABLES>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>IT_W3HEAD</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>W3HEAD</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>IS_TABLE_HEAD</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Field directory for internal table display in HTML</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>ET_HTML</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Contains HTML for WWW client</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>IT_TABLE</PARAMETER>
+       <KIND>P</KIND>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+   </FUNCTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

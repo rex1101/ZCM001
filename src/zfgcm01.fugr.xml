@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AREAT>BDC transcation recording overview</AREAT>
+   <INCLUDES>
+    <SOBJ_NAME>LZFGCM01F01</SOBJ_NAME>
+    <SOBJ_NAME>LZFGCM01TOP</SOBJ_NAME>
+    <SOBJ_NAME>SAPLZFGCM01</SOBJ_NAME>
+   </INCLUDES>
+   <FUNCTIONS>
+    <item>
+     <FUNCNAME>ZCM_CALL_BDC</FUNCNAME>
+     <SHORT_TEXT>Proessing transcation recording</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>NAME</PARAMETER>
+       <TYP>APQI-GROUPID</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>TCODE</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>TCODE</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>CTU_PARAMS</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>CTU_PARAMS</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>LOG_WADATA</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>SYCHAR512</TYP>
+      </RSIMP>
+     </IMPORT>
+     <EXPORT>
+      <RSEXP>
+       <PARAMETER>ICON</PARAMETER>
+       <TYP>ICON_D</TYP>
+      </RSEXP>
+      <RSEXP>
+       <PARAMETER>MSG</PARAMETER>
+       <TYP>BAPI_MSG</TYP>
+      </RSEXP>
+      <RSEXP>
+       <PARAMETER>MTYPE</PARAMETER>
+       <TYP>BAPI_MTYPE</TYP>
+      </RSEXP>
+     </EXPORT>
+     <TABLES>
+      <RSTBL>
+       <PARAMETER>BDC_TAB</PARAMETER>
+       <DBSTRUCT>BDCDATA</DBSTRUCT>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>RETURN</PARAMETER>
+       <DBSTRUCT>BAPIRET2</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+     </TABLES>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>NAME</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Group name: Batch input session name</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>TCODE</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Transaction Code</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>CTU_PARAMS</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Parameter string for runtime of CALL TRANSACTION USING...</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>LOG_WADATA</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Character field length 512</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>ICON</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Icon in text fields (substitute display, alias)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>MSG</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Message Text</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>MTYPE</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Message type: S Success, E Error, W Warning, I Info, A Abort</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>BDC_TAB</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Batch input: New table field structure</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>RETURN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Return Parameter</STEXT>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+    <item>
+     <FUNCNAME>ZCM_GET_BDC</FUNCNAME>
+     <SHORT_TEXT>Get transcation recorder Function</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>NAME</PARAMETER>
+       <TYP>APQI-GROUPID</TYP>
+      </RSIMP>
+     </IMPORT>
+     <EXPORT>
+      <RSEXP>
+       <PARAMETER>CTU_PARAMS</PARAMETER>
+       <TYP>CTU_PARAMS</TYP>
+      </RSEXP>
+      <RSEXP>
+       <PARAMETER>TCODE</PARAMETER>
+       <TYP>TCODE</TYP>
+      </RSEXP>
+     </EXPORT>
+     <TABLES>
+      <RSTBL>
+       <PARAMETER>BDC_TAB</PARAMETER>
+       <DBSTRUCT>BDCDATA</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>BDC_FCAT</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>LVC_T_FCAT</TYP>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>BDC_TAB_FIELD</PARAMETER>
+       <DBSTRUCT>BDCDATA</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+     </TABLES>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>NAME</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Group name: Batch input session name</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>CTU_PARAMS</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Parameter string for runtime of CALL TRANSACTION USING...</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>TCODE</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Transaction Code</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>BDC_TAB</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Batch input: New table field structure</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>BDC_FCAT</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Field Catalog for List Viewer Control</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>BDC_TAB_FIELD</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Batch input: New table field structure</STEXT>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+    <item>
+     <FUNCNAME>ZCM_GET_BDC_RFC</FUNCNAME>
+     <REMOTE_CALL>R</REMOTE_CALL>
+     <SHORT_TEXT>Remote get transcation recorder Function</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>NAME</PARAMETER>
+       <TYP>APQI-GROUPID</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>DESTINATION</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>RFCDEST</TYP>
+      </RSIMP>
+     </IMPORT>
+     <EXPORT>
+      <RSEXP>
+       <PARAMETER>CTU_PARAMS</PARAMETER>
+       <TYP>CTU_PARAMS</TYP>
+      </RSEXP>
+      <RSEXP>
+       <PARAMETER>TCODE</PARAMETER>
+       <TYP>TCODE</TYP>
+      </RSEXP>
+     </EXPORT>
+     <TABLES>
+      <RSTBL>
+       <PARAMETER>BDC_TAB</PARAMETER>
+       <DBSTRUCT>BDCDATA</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>BDC_FCAT</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>LVC_T_FCAT</TYP>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>BDC_TAB_FIELD</PARAMETER>
+       <DBSTRUCT>BDCDATA</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+     </TABLES>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>NAME</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Group name: Batch input session name</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>DESTINATION</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Logical destination (specified in function call)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>CTU_PARAMS</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Parameter string for runtime of CALL TRANSACTION USING...</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>TCODE</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Transaction Code</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>BDC_TAB</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Batch input: New table field structure</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>BDC_FCAT</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Field Catalog for List Viewer Control</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>BDC_TAB_FIELD</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Batch input: New table field structure</STEXT>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+   </FUNCTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

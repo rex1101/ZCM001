@@ -1,0 +1,113 @@
+*&---------------------------------------------------------------------*
+*&  Include           LZFGCM03F02
+*&---------------------------------------------------------------------*
+
+*&---------------------------------------------------------------------*
+*&      Form  FRM_GET_ATTACH_INFO
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->EX_ATTACH       text
+*      -->LT_ATTACHMENTS  text
+*----------------------------------------------------------------------*
+FORM FRM_GET_ATTACH_INFO2 USING FT_ATTACH TYPE ANY TABLE
+                               EX_FACT TYPE ZCM_SEND_MAIL_W3HEAD_TY
+                               IS_CONF TYPE ZCM_SENDMAIL_IMPORT
+      CHANGING LT_ATTACHMENTS TYPE RMPS_T_POST_CONTENT.
+
+
+  DATA:   IT_ATTACH TYPE STANDARD TABLE OF SOLISTI1 INITIAL SIZE 0
+                  WITH HEADER LINE.
+
+  DATA: LS_ATTACHMENT TYPE RMPS_POST_CONTENT.
+
+  DATA: LC_DESCR_REF TYPE REF TO CL_ABAP_STRUCTDESCR,
+           LV_VALUE     TYPE CHAR128,
+           LV_TEMP      TYPE STRING,
+           LV_MID       TYPE STRING,
+           LV_MID2       TYPE STRING,
+           LV_TABIX     TYPE SY-TABIX.
+
+  FIELD-SYMBOLS: <FS_INTABLE>  TYPE ANY.
+  FIELD-SYMBOLS: <INTABLE_WA>  TYPE ABAP_COMPDESCR.
+
+  CONSTANTS: C_TAB  TYPE C VALUE CL_ABAP_CHAR_UTILITIES=>HORIZONTAL_TAB,
+              C_CRET TYPE C VALUE CL_ABAP_CHAR_UTILITIES=>CR_LF,
+              C_MIMETYPE TYPE CHAR64
+                         VALUE 'APPLICATION/MSEXCEL;charset=utf-16le'.
+  DATA:   V_XATTACH TYPE XSTRING,
+
+           IT_BINARY_ATTACH TYPE SOLIX_TAB.
+
+  FIELD-SYMBOLS: <FS_ATTACH_SOURCE> TYPE ANY.
+  FIELD-SYMBOLS: <FS_ATTACH> TYPE ANY.
+
+
+  DATA: LS_W3HEAD TYPE W3HEAD.
+
+  "Excel HEAD
+  LOOP AT EX_FACT INTO LS_W3HEAD.
+    IF SY-TABIX = 1.
+      LV_TEMP = LS_W3HEAD-TEXT.
+    ELSE.
+      CONCATENATE LV_TEMP LS_W3HEAD-TEXT  INTO LV_TEMP SEPARATED BY C_TAB.
+    ENDIF.
+
+  ENDLOOP.
+  CONCATENATE LV_TEMP C_CRET INTO LV_MID.
+
+
+*  "Excel Body
+  LOOP AT FT_ATTACH ASSIGNING <FS_ATTACH_SOURCE>.
+
+    LV_TABIX = SY-TABIX.
+
+    CLEAR LV_TEMP.
+    LC_DESCR_REF ?= CL_ABAP_TYPEDESCR=>DESCRIBE_BY_DATA( <FS_ATTACH_SOURCE> ).
+    LOOP AT LC_DESCR_REF->COMPONENTS ASSIGNING <INTABLE_WA>.
+      ASSIGN COMPONENT SY-TABIX OF STRUCTURE  <FS_ATTACH_SOURCE> TO <FS_INTABLE>.
+      LV_VALUE = <FS_INTABLE>.
+      CONDENSE LV_VALUE.
+      IF SY-TABIX = 1.
+        LV_TEMP = LV_VALUE.
+        CONTINUE.
+      ENDIF.
+      CONCATENATE LV_TEMP LV_VALUE
+             INTO LV_TEMP SEPARATED BY C_TAB.
+    ENDLOOP.
+
+    CONCATENATE LV_MID LV_TEMP C_CRET INTO LV_MID.
+
+  ENDLOOP.
+
+*  Convert string to xstring type
+*  'APPLICATION/MSEXCEL;charset=utf-16le'
+  CALL FUNCTION 'SCMS_STRING_TO_XSTRING'
+    EXPORTING
+      TEXT     = LV_MID
+      MIMETYPE = C_MIMETYPE
+    IMPORTING
+      BUFFER   = V_XATTACH
+    EXCEPTIONS
+      FAILED   = 1
+      OTHERS   = 2.
+
+*  Add the file header for utf-16le.             .
+  IF SY-SUBRC = 0.
+    CONCATENATE CL_ABAP_CHAR_UTILITIES=>BYTE_ORDER_MARK_LITTLE
+                V_XATTACH INTO V_XATTACH IN BYTE MODE.
+  ENDIF.
+
+  CALL FUNCTION 'SCMS_XSTRING_TO_BINARY'
+    EXPORTING
+      BUFFER     = V_XATTACH
+    TABLES
+      BINARY_TAB = IT_BINARY_ATTACH.
+
+  LS_ATTACHMENT-SUBJECT = IS_CONF-SUBJECT.
+  LS_ATTACHMENT-OBJTP = IS_CONF-OBJTP.
+  LS_ATTACHMENT-CONT_HEX[] = IT_BINARY_ATTACH[].
+  APPEND LS_ATTACHMENT TO LT_ATTACHMENTS.
+  CLEAR:LS_ATTACHMENT.
+
+ENDFORM.                    "FRM_GET_ATTACH_INFO
