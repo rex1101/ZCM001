@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>1</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>1</DDLANGUAGE>
+     <DDTEXT>接口名称</DDTEXT>
+     <REPTEXT>接口名称</REPTEXT>
+     <SCRTEXT_S>接口名称</SCRTEXT_S>
+     <SCRTEXT_M>接口名称</SCRTEXT_M>
+     <SCRTEXT_L>接口名称</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

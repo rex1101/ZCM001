@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>1</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>1</DDLANGUAGE>
+     <DDTEXT>原始系统UUID</DDTEXT>
+     <REPTEXT>原始系统UUID</REPTEXT>
+     <SCRTEXT_S>原始系统UUID</SCRTEXT_S>
+     <SCRTEXT_M>原始系统UUID</SCRTEXT_M>
+     <SCRTEXT_L>原始系统UUID</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

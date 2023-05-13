@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>1</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>1</DDLANGUAGE>
+     <DDTEXT>日志任务类型</DDTEXT>
+     <REPTEXT>日志任务类型</REPTEXT>
+     <SCRTEXT_S>日志任务类型</SCRTEXT_S>
+     <SCRTEXT_M>日志任务类型</SCRTEXT_M>
+     <SCRTEXT_L>日志任务类型</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>
