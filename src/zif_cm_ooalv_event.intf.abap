@@ -2,7 +2,6 @@ interface ZIF_CM_OOALV_EVENT
   public .
 
 
-
   data DATA_CHANGED_FORM type STRING .
   data DATA_CHANGED_FINISHED_FORM type STRING .
   data DOUBLE_CLICK_FORM type STRING .

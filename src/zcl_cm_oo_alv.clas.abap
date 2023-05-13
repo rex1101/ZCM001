@@ -16,8 +16,8 @@ public section.
   types:
     TY_T_SPLITS TYPE TABLE OF TY_SPLITS .
 
-  constants GC_A type C value 'A'. "#EC NOTEXT
-  constants GC_D type C value 'D'. "#EC NOTEXT
+  constants GC_A type C value 'A' ##NO_TEXT.
+  constants GC_D type C value 'D' ##NO_TEXT.
   data GO_GRID type ref to CL_GUI_ALV_GRID .
   data GO_CONT type ref to CL_GUI_CUSTOM_CONTAINER .
   data SALV_TABLE type ref to CL_SALV_TABLE .
