@@ -3,63 +3,12 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <PROGDIR>
-    <NAME>YDEMO_OOFDALV</NAME>
+    <NAME>YDEMO_FALV_SUB</NAME>
     <SUBC>1</SUBC>
     <RLOAD>E</RLOAD>
     <FIXPT>X</FIXPT>
     <UCCHECK>X</UCCHECK>
    </PROGDIR>
-   <DYNPROS>
-    <item>
-     <HEADER>
-      <PROGRAM>YDEMO_OOFDALV</PROGRAM>
-      <SCREEN>9000</SCREEN>
-      <LANGUAGE>E</LANGUAGE>
-      <DESCRIPT>Main</DESCRIPT>
-      <TYPE>N</TYPE>
-      <NEXTSCREEN>9000</NEXTSCREEN>
-      <LINES>027</LINES>
-      <COLUMNS>120</COLUMNS>
-     </HEADER>
-     <CONTAINERS>
-      <RPY_DYCATT>
-       <TYPE>SCREEN</TYPE>
-       <NAME>SCREEN</NAME>
-      </RPY_DYCATT>
-     </CONTAINERS>
-     <FIELDS>
-      <RPY_DYFATC>
-       <CONT_TYPE>SCREEN</CONT_TYPE>
-       <CONT_NAME>SCREEN</CONT_NAME>
-       <TYPE>OKCODE</TYPE>
-       <NAME>G_OKCD</NAME>
-       <TEXT>____________________</TEXT>
-       <LENGTH>020</LENGTH>
-       <VISLENGTH>020</VISLENGTH>
-       <HEIGHT>001</HEIGHT>
-       <FORMAT>CHAR</FORMAT>
-       <INPUT_FLD>X</INPUT_FLD>
-      </RPY_DYFATC>
-     </FIELDS>
-     <FLOW_LOGIC>
-      <RPY_DYFLOW>
-       <LINE>PROCESS BEFORE OUTPUT.</LINE>
-      </RPY_DYFLOW>
-      <RPY_DYFLOW>
-       <LINE> MODULE STATUS_9000.</LINE>
-      </RPY_DYFLOW>
-      <RPY_DYFLOW>
-       <LINE>*</LINE>
-      </RPY_DYFLOW>
-      <RPY_DYFLOW>
-       <LINE>PROCESS AFTER INPUT.</LINE>
-      </RPY_DYFLOW>
-      <RPY_DYFLOW>
-       <LINE> MODULE USER_COMMAND_9000.</LINE>
-      </RPY_DYFLOW>
-     </FLOW_LOGIC>
-    </item>
-   </DYNPROS>
    <CUA>
     <ADM>
      <ACTCODE>000001</ACTCODE>
@@ -73,7 +22,7 @@
       <ACTCODE>000001</ACTCODE>
       <PFKCODE>000001</PFKCODE>
       <BUTCODE>0001</BUTCODE>
-      <INT_NOTE>MAIN</INT_NOTE>
+      <INT_NOTE>Main</INT_NOTE>
      </RSMPE_STAT>
     </STA>
     <FUN>
@@ -282,6 +231,16 @@
       <FUN_TEXT>Details</FUN_TEXT>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
+      <CODE>&amp;EXE</CODE>
+      <TEXTNO>001</TEXTNO>
+      <TEXT_TYPE>S</TEXT_TYPE>
+      <TEXT_NAME>ICON_COLOR</TEXT_NAME>
+      <ICON_ID>@G3@</ICON_ID>
+      <FUN_TEXT>Execute</FUN_TEXT>
+      <ICON_TEXT>Execute</ICON_TEXT>
+      <INFO_TEXT>Execute</INFO_TEXT>
+     </RSMPE_FUNT>
+     <RSMPE_FUNT>
       <CODE>&amp;F03</CODE>
       <TEXTNO>001</TEXTNO>
       <TEXT_TYPE>S</TEXT_TYPE>
@@ -457,14 +416,6 @@
       <PATH>I</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
-      <CODE>&amp;PNT</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT_NAME>ICON_PRINT</TEXT_NAME>
-      <ICON_ID>@0X@</ICON_ID>
-      <FUN_TEXT>Print</FUN_TEXT>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
       <CODE>&amp;RNT</CODE>
       <TEXTNO>001</TEXTNO>
       <TEXT_TYPE>S</TEXT_TYPE>
@@ -532,26 +483,6 @@
       <ICON_ID>@DJ@</ICON_ID>
       <FUN_TEXT>Spreadsheet...</FUN_TEXT>
       <PATH>A</PATH>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>BACK</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <FUN_TEXT>Back</FUN_TEXT>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>CANCEL</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT_NAME>ICON_CANCEL</TEXT_NAME>
-      <ICON_ID>@0W@</ICON_ID>
-      <FUN_TEXT>Cancel</FUN_TEXT>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>EXIT</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <FUN_TEXT>Exit</FUN_TEXT>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>P+</CODE>
@@ -1181,6 +1112,12 @@
       <NO>22</NO>
       <PFNO>S</PFNO>
      </RSMPE_BUT>
+     <RSMPE_BUT>
+      <PFK_CODE>000001</PFK_CODE>
+      <CODE>0001</CODE>
+      <NO>23</NO>
+      <PFNO>38</PFNO>
+     </RSMPE_BUT>
     </BUT>
     <PFK>
      <RSMPE_PFK>
@@ -1198,7 +1135,7 @@
      <RSMPE_PFK>
       <CODE>000001</CODE>
       <PFNO>03</PFNO>
-      <FUNCODE>BACK</FUNCODE>
+      <FUNCODE>&amp;F03</FUNCODE>
       <FUNNO>001</FUNNO>
      </RSMPE_PFK>
      <RSMPE_PFK>
@@ -1228,13 +1165,13 @@
      <RSMPE_PFK>
       <CODE>000001</CODE>
       <PFNO>12</PFNO>
-      <FUNCODE>CANCEL</FUNCODE>
+      <FUNCODE>&amp;F12</FUNCODE>
       <FUNNO>001</FUNNO>
      </RSMPE_PFK>
      <RSMPE_PFK>
       <CODE>000001</CODE>
       <PFNO>15</PFNO>
-      <FUNCODE>EXIT</FUNCODE>
+      <FUNCODE>&amp;F15</FUNCODE>
       <FUNNO>001</FUNNO>
      </RSMPE_PFK>
      <RSMPE_PFK>
@@ -1347,6 +1284,12 @@
      </RSMPE_PFK>
      <RSMPE_PFK>
       <CODE>000001</CODE>
+      <PFNO>38</PFNO>
+      <FUNCODE>&amp;EXE</FUNCODE>
+      <FUNNO>001</FUNNO>
+     </RSMPE_PFK>
+     <RSMPE_PFK>
+      <CODE>000001</CODE>
       <PFNO>39</PFNO>
       <FUNCODE>&amp;ETA</FUNCODE>
       <FUNNO>001</FUNNO>
@@ -1444,7 +1387,7 @@
      <RSMPE_PFK>
       <CODE>000001</CODE>
       <PFNO>86</PFNO>
-      <FUNCODE>&amp;PNT</FUNCODE>
+      <FUNCODE>&amp;RNT</FUNCODE>
       <FUNNO>001</FUNNO>
      </RSMPE_PFK>
     </PFK>
@@ -1571,6 +1514,10 @@
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>MAIN</STATUS>
+      <FUNCTION>&amp;EXE</FUNCTION>
+     </RSMPE_STAF>
+     <RSMPE_STAF>
+      <STATUS>MAIN</STATUS>
       <FUNCTION>&amp;F03</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
@@ -1651,10 +1598,6 @@
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>MAIN</STATUS>
-      <FUNCTION>&amp;PNT</FUNCTION>
-     </RSMPE_STAF>
-     <RSMPE_STAF>
-      <STATUS>MAIN</STATUS>
       <FUNCTION>&amp;RNT</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
@@ -1708,10 +1651,6 @@
      <RSMPE_STAF>
       <STATUS>MAIN</STATUS>
       <FUNCTION>BEBN</FUNCTION>
-     </RSMPE_STAF>
-     <RSMPE_STAF>
-      <STATUS>MAIN</STATUS>
-      <FUNCTION>CANCEL</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>MAIN</STATUS>
@@ -1896,22 +1835,10 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>OO Alv Customize Function Slipt Screen Demo</ENTRY>
-     <LENGTH>43</LENGTH>
+     <ENTRY>Function ALV Demo(Sub Screen)</ENTRY>
+     <LENGTH>29</LENGTH>
     </item>
    </TPOOL>
-   <I18N_TPOOL>
-    <item>
-     <LANGUAGE>1</LANGUAGE>
-     <TEXTPOOL>
-      <item>
-       <ID>R</ID>
-       <ENTRY>OO Alv 自定义封装分割屏幕演示程序</ENTRY>
-       <LENGTH>70</LENGTH>
-      </item>
-     </TEXTPOOL>
-    </item>
-   </I18N_TPOOL>
   </asx:values>
  </asx:abap>
 </abapGit>

@@ -11,6 +11,63 @@
     <FIXPT>X</FIXPT>
     <UNICODE>X</UNICODE>
    </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>GO_CONT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Container for customer controls in the dynpro area</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GO_DOCKING_CONT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Docking Control Container</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GO_EVENT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>OOALV event handler</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GO_GRID</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>ALV List Viewer</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GS_DISVARIANT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Layout (External Use)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GS_LAYOUT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>ALV control: Layout structure</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GT_EXCLUDE2</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Function Code Table</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GT_FCAT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Field Catalog for List Viewer Control</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GV_REPID</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>ABAP Program Name</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>LS_EXCLUDE2</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Function code</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SALV_TABLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Basis Class for Simple Tables</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
   </asx:values>
  </asx:abap>
 </abapGit>

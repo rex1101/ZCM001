@@ -18,8 +18,8 @@
       <DESCRIPT>Main</DESCRIPT>
       <TYPE>N</TYPE>
       <NEXTSCREEN>9000</NEXTSCREEN>
-      <LINES>027</LINES>
-      <COLUMNS>120</COLUMNS>
+      <LINES>100</LINES>
+      <COLUMNS>255</COLUMNS>
      </HEADER>
      <CONTAINERS>
       <RPY_DYCATT>
@@ -32,8 +32,8 @@
        <ELEMENT_OF>SCREEN</ELEMENT_OF>
        <LINE>001</LINE>
        <COLUMN>001</COLUMN>
-       <LENGTH>061</LENGTH>
-       <HEIGHT>017</HEIGHT>
+       <LENGTH>255</LENGTH>
+       <HEIGHT>100</HEIGHT>
       </RPY_DYCATT>
      </CONTAINERS>
      <FIELDS>
@@ -104,12 +104,14 @@
      <RSMPE_FUNT>
       <CODE>BACK</CODE>
       <TEXTNO>001</TEXTNO>
+      <TYPE>E</TYPE>
       <TEXT_TYPE>S</TEXT_TYPE>
       <FUN_TEXT>Back</FUN_TEXT>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>CANCEL</CODE>
       <TEXTNO>001</TEXTNO>
+      <TYPE>E</TYPE>
       <TEXT_TYPE>S</TEXT_TYPE>
       <TEXT_NAME>ICON_CANCEL</TEXT_NAME>
       <ICON_ID>@0W@</ICON_ID>
@@ -182,6 +184,7 @@
      <RSMPE_FUNT>
       <CODE>EXIT</CODE>
       <TEXTNO>001</TEXTNO>
+      <TYPE>E</TYPE>
       <TEXT_TYPE>S</TEXT_TYPE>
       <FUN_TEXT>Exit</FUN_TEXT>
      </RSMPE_FUNT>

@@ -207,8 +207,9 @@ FORM FRM_OUTPUT_DATA .
   IF P_CALLD = 'X'.
     EXPORT GT_OUT TO  MEMORY ID GV_TDFIND."G_MEMORY.
   ELSE.
-*    PERFORM FRM_SHOW_ALV.   "Display ALV List
-    PERFORM FRM_SHOW_ALV_MANUAL.   "Display ALV List
+
+
+    CALL SCREEN 9000.
   ENDIF.
 
 ENDFORM.                    " FRM_OUTPUT_DATA
@@ -328,11 +329,13 @@ FORM FRM_SHOW_ALV .
 
   CREATE OBJECT GO_OOALV1.
   CREATE OBJECT GO_OOALV2.
+  CREATE OBJECT GO_OOALV3.
+  CREATE OBJECT GO_OOALV4.
 
   CALL METHOD ZCL_CM_OO_ALV=>MT_SPLIT_CONTAINER
     EXPORTING
       IV_CONTAINER_NAME = 'GO_CONT'
-      I_ROW             = 1
+      I_ROW             = 2
       I_COL             = 2
     IMPORTING
       ET_CONTAINER_T    = LT_CONTAINER.
@@ -341,97 +344,62 @@ FORM FRM_SHOW_ALV .
   CHECK LT_CONTAINER IS NOT INITIAL.
 
   CLEAR:LS_CONTAINER.
-  READ TABLE LT_CONTAINER INTO LS_CONTAINER INDEX 1.
+  READ TABLE LT_CONTAINER INTO LS_CONTAINER INDEX 2.
   IF SY-SUBRC EQ 0.
     CALL METHOD GO_OOALV2->MT_CREATE_OO_ALV
       EXPORTING
-        IV_SPLIT_NUMBER    = 1
+        IV_SPLIT_NUMBER    = 2
         IV_SPLIT_CONTAINER = LS_CONTAINER-CONTAINER
       CHANGING
         IT_DATA            = GT_OUT2.
   ENDIF.
   CLEAR:LS_CONTAINER.
-  READ TABLE LT_CONTAINER INTO LS_CONTAINER INDEX 2.
+
+  READ TABLE LT_CONTAINER INTO LS_CONTAINER INDEX 1.
   IF SY-SUBRC EQ 0.
     CALL METHOD GO_OOALV1->MT_CREATE_OO_ALV
       EXPORTING
-        IV_SPLIT_NUMBER    = 2
+        IV_SPLIT_NUMBER    = 1
         IV_SPLIT_CONTAINER = LS_CONTAINER-CONTAINER
       CHANGING
         IT_DATA            = GT_OUT.
   ENDIF.
+  CLEAR:LS_CONTAINER.
 
-  CALL SCREEN 9000.
-
-ENDFORM.                    " FRM_SHOW_ALV
-
-*&---------------------------------------------------------------------*
-*&      Form  FRM_SHOW_ALV
-*&---------------------------------------------------------------------*
-*       Display ALV List
-*----------------------------------------------------------------------*
-FORM FRM_SHOW_ALV_MANUAL .
-
-
-  DATA:REF_CONTAINER_TOP    TYPE REF TO CL_GUI_CONTAINER,
-       REF_CONTAINER_BOTTOM TYPE REF TO CL_GUI_CONTAINER,
-       REF_CONTAINER_PARENT TYPE REF TO CL_GUI_CUSTOM_CONTAINER,
-       REF_SPLITTER         TYPE REF TO CL_GUI_SPLITTER_CONTAINER.  "SPLITTER TO SPLIT THE PARAENT CONTAINER
-
-
-  CREATE OBJECT GO_OOALV1.
-  CREATE OBJECT GO_OOALV2.
-
-  "STEP 1 CREATE PARENT CONTAINER
-  CREATE OBJECT REF_CONTAINER_PARENT
-    EXPORTING
-      CONTAINER_NAME = 'GO_CONT'.
-  "STEP 2 CRATE SPLITTER
-  CREATE OBJECT REF_SPLITTER
-    EXPORTING
-      PARENT  = REF_CONTAINER_PARENT
-      ROWS    = 2
-      COLUMNS = 1.
-  "STEP 3 CREATE TOP CONTAINER
-  CALL METHOD REF_SPLITTER->GET_CONTAINER
-    EXPORTING
-      ROW       = 1
-      COLUMN    = 1
-    RECEIVING
-      CONTAINER = REF_CONTAINER_TOP.
-  CALL METHOD REF_SPLITTER->GET_CONTAINER
-    EXPORTING
-      ROW       = 2
-      COLUMN    = 1
-    RECEIVING
-      CONTAINER = REF_CONTAINER_BOTTOM.
-
-
-    CALL METHOD GO_OOALV2->MT_CREATE_OO_ALV
+  READ TABLE LT_CONTAINER INTO LS_CONTAINER INDEX 3.
+  IF SY-SUBRC EQ 0.
+    CALL METHOD GO_OOALV3->MT_CREATE_OO_ALV
       EXPORTING
-        IV_SPLIT_NUMBER    = 1
-        IV_SPLIT_CONTAINER = REF_CONTAINER_TOP
+        IV_SPLIT_NUMBER    = 3
+        IV_SPLIT_CONTAINER = LS_CONTAINER-CONTAINER
       CHANGING
         IT_DATA            = GT_OUT2.
+  ENDIF.
+    CLEAR:LS_CONTAINER.
 
-    CALL METHOD GO_OOALV1->MT_CREATE_OO_ALV
+  READ TABLE LT_CONTAINER INTO LS_CONTAINER INDEX 4.
+  IF SY-SUBRC EQ 0.
+    CALL METHOD GO_OOALV4->MT_CREATE_OO_ALV
       EXPORTING
-        IV_SPLIT_NUMBER    = 2
-        IV_SPLIT_CONTAINER = REF_CONTAINER_BOTTOM
+        IV_SPLIT_NUMBER    = 4
+        IV_SPLIT_CONTAINER = LS_CONTAINER-CONTAINER
       CHANGING
         IT_DATA            = GT_OUT.
-
-  CALL SCREEN 9000.
+  ENDIF.
+  CLEAR:LS_CONTAINER.
 
 ENDFORM.                    " FRM_SHOW_ALV
+
 *&---------------------------------------------------------------------*
 *& Module STATUS_9000 OUTPUT
 *&---------------------------------------------------------------------*
 *&
 *&---------------------------------------------------------------------*
 MODULE STATUS_9000 OUTPUT.
-  SET PF-STATUS 'STATUS'.
+  SET PF-STATUS 'MAIN'.
   SET TITLEBAR 'TITLE'.
+  PERFORM FRM_SHOW_ALV.   "Display ALV List
+*    PERFORM FRM_SHOW_ALV_MANUAL.   "Display ALV List
 ENDMODULE.                    "status_9000 OUTPUT
 *&---------------------------------------------------------------------*
 *&      Module  USER_COMMAND_9000  INPUT
@@ -450,55 +418,6 @@ MODULE USER_COMMAND_9000 INPUT.
   ENDCASE.
   CLEAR G_OKCD.
 ENDMODULE.                    "user_command_9000 INPUT
-
-**&---------------------------------------------------------------------*
-**&      Form  SUB_SEARCH_HELP_VRTNR
-**&---------------------------------------------------------------------*
-**       text
-**----------------------------------------------------------------------*
-*FORM SUB_SEARCH_HELP_PLANETYPE  USING  LV_FIELD TYPE DYNFNAM .
-*  REFRESH GT_SAPLANE.
-*  SELECT *
-*    FROM SAPLANE
-*    INTO TABLE GT_SAPLANE.
-*  CALL FUNCTION 'F4IF_INT_TABLE_VALUE_REQUEST'
-*    EXPORTING
-*      RETFIELD     = 'PLANETYPE'
-*      DYNPPROG     = SY-REPID
-*      DYNPNR       = SY-DYNNR
-*      DYNPROFIELD  = LV_FIELD
-**     STEPL        = 0
-*      WINDOW_TITLE = '飞机类型'
-*      VALUE_ORG    = 'S'
-*    TABLES
-*      VALUE_TAB    = GT_SAPLANE.
-*ENDFORM.                    "SUB_SEARCH_HELP_PLANETYPE
-*
-**&---------------------------------------------------------------------*
-**&      Form  SUB_SEARCH_HELP_ALVDEafult
-**&---------------------------------------------------------------------*
-**       text
-**----------------------------------------------------------------------*
-*FORM SUB_SEARCH_HELP_ALVDEAFULT.
-*
-*  GS_VARIANT-REPORT = SY-CPROG.
-*
-*  CALL FUNCTION 'REUSE_ALV_VARIANT_F4'
-*    EXPORTING
-*      IS_VARIANT = GS_VARIANT
-*      I_SAVE     = 'A'
-*    IMPORTING
-*      ES_VARIANT = GS_VARIANT
-*    EXCEPTIONS
-*      NOT_FOUND  = 2.
-*  IF SY-SUBRC = 2.
-*    MESSAGE ID SY-MSGID TYPE 'S' NUMBER SY-MSGNO
-*            WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
-*  ELSE.
-*    ALV_DEF = GS_VARIANT-VARIANT.
-*  ENDIF.
-*
-*ENDFORM.                    "SUB_SEARCH_HELP_ALVDEafult
 
 *&---------------------------------------------------------------------*
 *&      Form  ALV_DATA_CHANGED
@@ -519,19 +438,36 @@ FORM FRM_ALV_DATA_CHANGED USING P_GRID_NM
                             E_ONF4_AFTER
                             E_UCOMM.
 
-*  DATA: LT_DATA   TYPE  LVC_T_MODI,
-*        LS_DATA   TYPE  LVC_S_MODI.
+*  BREAK SUNHM.
+*  DATA: LS_DATA   TYPE  LVC_S_MODI.
 *  FIELD-SYMBOLS: <FS_OUT> TYPE TY_OUT.
 *
 *  IF E_ONF4 = 'X' AND E_ONF4_BEFORE = 'X' AND E_ONF4_AFTER = ''.
 *    EXIT.
 *  ENDIF.
 *
-*
-**  lT_DATA = ER_DATA_CHANGED->MT_MOD_CELLS.
 *  LOOP AT ER_DATA_CHANGED->MT_MOD_CELLS INTO LS_DATA .
-*    READ TABLE GT_OUT ASSIGNING <FS_OUT> INDEX LS_DATA-ROW_ID.
+*    CASE LS_DATA-FIELDNAME.
+*      WHEN 'WRBTR'.
+*        READ TABLE GT_OUT ASSIGNING <FS_OUT> INDEX LS_DATA-ROW_ID.
+*
+**        CALL METHOD ER_DATA_CHANGED->ADD_PROTOCOL_ENTRY
+**          EXPORTING
+**            I_MSGID     = 'OO'
+**            I_MSGTY     = 'E'
+**            I_MSGNO     = '000'
+**            I_MSGV1     = '权限重复'
+**            I_FIELDNAME = LS_DATA-FIELDNAME
+**            I_ROW_ID    = LS_DATA-ROW_ID
+**            I_TABIX     = LS_DATA-TABIX.
+*
+*        <FS_OUT>-WRBTR = LS_DATA-VALUE.
+**      WHEN .
+*      WHEN OTHERS.
+*    ENDCASE.
+*
 *  ENDLOOP.
+
 
 ENDFORM.                    "ALV_DATA_CHANGED
 

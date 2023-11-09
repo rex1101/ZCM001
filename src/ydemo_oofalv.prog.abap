@@ -1,11 +1,11 @@
 *&---------------------------------------------------------------------*
-* Program Name     : YDEMO_OOFALV
-* Program Purpose  : Call Method OO ALV Function Demo
+* Program Name     : YDEMO_OOFDALV
+* Program Purpose  : Call Method OO Docking ALV Function Demo
 * Author           : SUN HUIMING
 * Date Written     : 2014/12/04
 * Note             : N/A
 *&---------------------------------------------------------------------*
-REPORT  YDEMO_OOFALV .
+REPORT  YDEMO_OOFDALV.
 
 *----------------------------------------------------------------------*
 *    Type Pool declarations
@@ -40,6 +40,7 @@ DATA: GT_OUT TYPE TABLE OF TY_OUT,
 DATA: GS_LAYO TYPE LVC_S_LAYO "Alv 全局属性
     , GS_VARIANT TYPE DISVARIANT
     , GT_FCAT TYPE LVC_T_FCAT "存放列表的名称
+    , GT_FCAT2 TYPE LVC_T_FCAT "存放列表的名称
     , GT_SORT TYPE LVC_T_SORT "定义排序变量
     , GT_EVTS TYPE LVC_T_EVTS "注册事件
     , GT_EXCL TYPE SLIS_T_EXTAB "LVC_T_EXCL "Excluding Table
@@ -108,6 +109,7 @@ START-OF-SELECTION.
 *&---------------------------------------------------------------------*
 END-OF-SELECTION.
 
+
 * Output result to file or spool/screen
   PERFORM FRM_OUTPUT_DATA.
 
@@ -166,14 +168,15 @@ FORM FRM_SELECT_DATA .
      AND CONNID IN S_CONNID
      AND PLANETYPE IN S_PLANET.
 
+
 ENDFORM.                    " FRM_SELECT_DATA
+
 *&---------------------------------------------------------------------*
 *&      Form  FRM_OUTPUT_DATA
 *&---------------------------------------------------------------------*
 *       Output result to file or spool/screen
 *----------------------------------------------------------------------*
 FORM FRM_OUTPUT_DATA .
-
   PERFORM FRM_BUILD_FCAT. "Field Catalog Table
   IF P_CALLD = 'X'.
     EXPORT GT_OUT TO  MEMORY ID GV_TDFIND."G_MEMORY.
@@ -244,7 +247,7 @@ FORM FRM_ADD_FIELD USING I_FIELDNAME TYPE LVC_FNAME
   DATA:LV_TEXT TYPE MESSAGE.
   CHECK I_FIELDNAME <> 'MANDT'.
   DATA: LS_FCAT TYPE LVC_S_FCAT.
-  LS_FCAT-TABNAME   = 'GT_OUT'.
+*  LS_FCAT-TABNAME   = 'GT_OUT'.
 *  LS_FCAT-REF_TABLE = 'SFLIGHT'.
   LS_FCAT-FIELDNAME = I_FIELDNAME. "字段名称
   LS_FCAT-REF_FIELD = I_FIELDNAME. "字段名称
@@ -265,6 +268,9 @@ FORM FRM_ADD_FIELD USING I_FIELDNAME TYPE LVC_FNAME
       LS_FCAT-NO_ZERO = 'X'.
       LS_FCAT-EMPHASIZE = 'C310'."列颜色
       LS_FCAT-DO_SUM = 'X'.
+
+      WHEN 'PLANETYPE'.
+        LS_FCAT-EDIT = 'X'.
     WHEN OTHERS.
   ENDCASE.
 
@@ -285,7 +291,6 @@ FORM FRM_ADD_FIELD USING I_FIELDNAME TYPE LVC_FNAME
   APPEND LS_FCAT TO GT_FCAT.
   CLEAR  LS_FCAT.
 ENDFORM.                    " FRM_ADD_FIELD
-
 *&---------------------------------------------------------------------*
 *&      Form  FRM_SHOW_ALV
 *&---------------------------------------------------------------------*
@@ -293,36 +298,69 @@ ENDFORM.                    " FRM_ADD_FIELD
 *----------------------------------------------------------------------*
 FORM FRM_SHOW_ALV .
 
+  DATA: LO_DOCK TYPE REF TO CL_GUI_DOCKING_CONTAINER. "屏幕容器对象
+
   CREATE OBJECT GO_OOALV.
+
+
+  "实例化屏幕容器
+  CREATE OBJECT LO_DOCK
+    EXPORTING
+*     PARENT                      =
+      REPID                       = SY-REPID                                                            "当前程序
+      DYNNR                       = '9000'                                                               "屏幕编号
+      SIDE                        = CL_GUI_DOCKING_CONTAINER=>DOCK_AT_LEFT   "容器吸附左侧
+      EXTENSION                   = 1300                                                              "ALV的宽度
+*     STYLE                       =
+*     LIFETIME                    = lifetime_default
+*     CAPTION                     =
+      METRIC                      = 0
+*     RATIO                       = 100                                                                    "ALV的比率，优先级高于上面的EXTENSION
+*     NO_AUTODEF_PROGID_DYNNR     =
+*     NAME                        =
+    EXCEPTIONS
+      CNTL_ERROR                  = 1
+      CNTL_SYSTEM_ERROR           = 2
+      CREATE_ERROR                = 3
+      LIFETIME_ERROR              = 4
+      LIFETIME_DYNPRO_DYNPRO_LINK = 5
+      OTHERS                      = 6.
+  IF SY-SUBRC <> 0.
+*   MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
+*              WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
+  ENDIF.
+
 
   CALL METHOD GO_OOALV->MT_CREATE_OO_ALV
   EXPORTING
-   IV_REPID          = SY-CPROG
-   IV_SCREEN         = '9000'
-   IV_DEFAULT_EX     = 'X'
-*   is_layout         =
-   IT_FIELDCAT       = GT_FCAT
-*   it_exclude        =
-*   iv_split_number   =
-*   iv_split_container          =
-   IV_CONTAINER_NAME             = 'GO_CONT'
-   IV_VARIANT_HANDLE             = '1'
-   I_F4_FORM                     = 'FRM_ALV_ON_F4'
-   I_TOOLBAR_FORM                = 'FRM_ALV_TOOLBAR'
-   I_USER_COMMAND_FORM           = 'FRM_ALV_USER_COMMAND'
-   I_HOTSPOT_FORM                = 'FRM_ALV_HOTSPOTE_CLICK'
-   I_DATACHANGED_FORM            = 'FRM_ALV_DATA_CHANGED'
-   I_DATACHANGED_FINISHED_FORM   = 'FRM_ALV_DATA_CHANGED_FINISHED'
-   I_BEFORE_UCOMM_FORM           = 'FRM_ALV_BEFORE_USER_COMMAND'
-   I_DOUBLE_CLICK_FORM           = 'FRM_ALV_DOUBLE_CLICK'
-   I_MENU_BUTTON_FORM            = 'FRM_ALV_MENU_BUTTON'
+   IV_REPID                      = SY-CPROG
+   IV_SCREEN                     = '9000'
+   IV_DEFAULT_EX                 = 'X'
+*   IS_LAYOUT                     =
+   IT_FIELDCAT                   = GT_FCAT
+*   IT_EXCLUDE                    =
+   IV_SPLIT_NUMBER               = 1
+   IV_SPLIT_CONTAINER            = LO_DOCK
+*   IV_CONTAINER_NAME             = 'GO_CONT'
+*   IV_VARIANT_HANDLE             = '1'
+*   I_F4_FORM                     = 'FRM_ALV_ON_F4'
+*   I_TOOLBAR_FORM                = 'FRM_ALV_TOOLBAR'
+*   I_USER_COMMAND_FORM           = 'FRM_ALV_USER_COMMAND'
+*   I_HOTSPOT_FORM                = 'FRM_ALV_HOTSPOTE_CLICK'
+*   I_DATACHANGED_FORM            = 'FRM_ALV_DATA_CHANGED'
+*   I_DATACHANGED_FINISHED_FORM   = 'FRM_ALV_DATA_CHANGED_FINISHED'
+*   I_BEFORE_UCOMM_FORM           = 'FRM_ALV_BEFORE_USER_COMMAND'
+*   I_DOUBLE_CLICK_FORM           = 'FRM_ALV_DOUBLE_CLICK'
+*   I_MENU_BUTTON_FORM            = 'FRM_ALV_MENU_BUTTON'
    CHANGING
-    IT_DATA           = GT_OUT.
-
+    IT_DATA           = GT_OUT
+    .
 
   CALL SCREEN 9000.
 
+
 ENDFORM.                    " FRM_SHOW_ALV
+
 *&---------------------------------------------------------------------*
 *& Module STATUS_9000 OUTPUT
 *&---------------------------------------------------------------------*
@@ -340,15 +378,63 @@ ENDMODULE.                    "status_9000 OUTPUT
 MODULE USER_COMMAND_9000 INPUT.
   CASE G_OKCD.
     WHEN 'EXIT' OR 'BACK'.
-      CALL METHOD GO_OOALV->FREE.
+*      CALL METHOD GO_OOALV->FREE.
       LEAVE TO SCREEN 0.
-    WHEN  'CANC'.
+    WHEN  'CANC' OR 'CANCEL'.
       LEAVE PROGRAM.
     WHEN OTHERS.
   ENDCASE.
   CLEAR G_OKCD.
 ENDMODULE.                    "user_command_9000 INPUT
 
+**&---------------------------------------------------------------------*
+**&      Form  SUB_SEARCH_HELP_VRTNR
+**&---------------------------------------------------------------------*
+**       text
+**----------------------------------------------------------------------*
+*FORM SUB_SEARCH_HELP_PLANETYPE  USING  LV_FIELD TYPE DYNFNAM .
+*  REFRESH GT_SAPLANE.
+*  SELECT *
+*    FROM SAPLANE
+*    INTO TABLE GT_SAPLANE.
+*  CALL FUNCTION 'F4IF_INT_TABLE_VALUE_REQUEST'
+*    EXPORTING
+*      RETFIELD     = 'PLANETYPE'
+*      DYNPPROG     = SY-REPID
+*      DYNPNR       = SY-DYNNR
+*      DYNPROFIELD  = LV_FIELD
+**     STEPL        = 0
+*      WINDOW_TITLE = '飞机类型'
+*      VALUE_ORG    = 'S'
+*    TABLES
+*      VALUE_TAB    = GT_SAPLANE.
+*ENDFORM.                    "SUB_SEARCH_HELP_PLANETYPE
+*
+**&---------------------------------------------------------------------*
+**&      Form  SUB_SEARCH_HELP_ALVDEafult
+**&---------------------------------------------------------------------*
+**       text
+**----------------------------------------------------------------------*
+*FORM SUB_SEARCH_HELP_ALVDEAFULT.
+*
+*  GS_VARIANT-REPORT = SY-CPROG.
+*
+*  CALL FUNCTION 'REUSE_ALV_VARIANT_F4'
+*    EXPORTING
+*      IS_VARIANT = GS_VARIANT
+*      I_SAVE     = 'A'
+*    IMPORTING
+*      ES_VARIANT = GS_VARIANT
+*    EXCEPTIONS
+*      NOT_FOUND  = 2.
+*  IF SY-SUBRC = 2.
+*    MESSAGE ID SY-MSGID TYPE 'S' NUMBER SY-MSGNO
+*            WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
+*  ELSE.
+*    ALV_DEF = GS_VARIANT-VARIANT.
+*  ENDIF.
+*
+*ENDFORM.                    "SUB_SEARCH_HELP_ALVDEafult
 
 *&---------------------------------------------------------------------*
 *&      Form  ALV_DATA_CHANGED
@@ -369,19 +455,36 @@ FORM FRM_ALV_DATA_CHANGED USING P_GRID_NM
                             E_ONF4_AFTER
                             E_UCOMM.
 
-*  DATA: LT_DATA   TYPE  LVC_T_MODI,
-*        LS_DATA   TYPE  LVC_S_MODI.
+*  BREAK SUNHM.
+*  DATA: LS_DATA   TYPE  LVC_S_MODI.
 *  FIELD-SYMBOLS: <FS_OUT> TYPE TY_OUT.
 *
 *  IF E_ONF4 = 'X' AND E_ONF4_BEFORE = 'X' AND E_ONF4_AFTER = ''.
 *    EXIT.
 *  ENDIF.
 *
-*
-**  lT_DATA = ER_DATA_CHANGED->MT_MOD_CELLS.
 *  LOOP AT ER_DATA_CHANGED->MT_MOD_CELLS INTO LS_DATA .
-*    READ TABLE GT_OUT ASSIGNING <FS_OUT> INDEX LS_DATA-ROW_ID.
+*    CASE LS_DATA-FIELDNAME.
+*      WHEN 'WRBTR'.
+*        READ TABLE GT_OUT ASSIGNING <FS_OUT> INDEX LS_DATA-ROW_ID.
+*
+**        CALL METHOD ER_DATA_CHANGED->ADD_PROTOCOL_ENTRY
+**          EXPORTING
+**            I_MSGID     = 'OO'
+**            I_MSGTY     = 'E'
+**            I_MSGNO     = '000'
+**            I_MSGV1     = '权限重复'
+**            I_FIELDNAME = LS_DATA-FIELDNAME
+**            I_ROW_ID    = LS_DATA-ROW_ID
+**            I_TABIX     = LS_DATA-TABIX.
+*
+*        <FS_OUT>-WRBTR = LS_DATA-VALUE.
+**      WHEN .
+*      WHEN OTHERS.
+*    ENDCASE.
+*
 *  ENDLOOP.
+
 
 ENDFORM.                    "ALV_DATA_CHANGED
 
@@ -414,7 +517,7 @@ FORM FRM_ALV_DATA_CHANGED_FINISHED USING P_GRID_NAME
 *
 *  ENDLOOP.
 *
-*    CALL METHOD GO_OOALV->MT_REFRESH_OO_ALV.
+*  PERFORM FRM_ALV_REFRESH USING GO_GRID GT_FCAT[] 'F'.
 
 ENDFORM.                    "ALV_DATA_CHANGED_FINISHED
 
@@ -515,13 +618,13 @@ FORM FRM_ALV_ON_F4  USING P_GRID_NM
 *  LS_FCAT-F4AVAILABL = 'X'.
 *  <F4 Parameters--end>
 
-*  CASE  P_FIELDNAME.
-*    WHEN 'CARRID'.
+  CASE  P_FIELDNAME.
+    WHEN 'CARRID'.
 *      PERFORM FRM_F4_CARRID   USING P_FIELDNAME PS_ROW_NO PO_EVENT_DATA.
-*    WHEN OTHERS.
-*  ENDCASE.
+    WHEN OTHERS.
+  ENDCASE.
 
-  CALL METHOD GO_OOALV->MT_REFRESH_OO_ALV.
+*  PERFORM FRM_ALV_REFRESH USING GO_GRID GT_FCAT[] 'F'.
 
 ENDFORM.                    "FRM_ALV_ON_F4
 
@@ -537,8 +640,8 @@ ENDFORM.                    "FRM_ALV_ON_F4
 FORM FRM_ALV_TOOLBAR USING P_GRID_NM
                        E_OBJECT TYPE REF TO CL_ALV_EVENT_TOOLBAR_SET
                        E_INTERACTIVE.
-
-
+*
+*
 *  DATA: LS_TOOLBAR TYPE STB_BUTTON.
 *
 ** Seperator
@@ -556,8 +659,8 @@ FORM FRM_ALV_TOOLBAR USING P_GRID_NM
 *  LS_TOOLBAR-QUICKINFO = '插入行'.
 *  LS_TOOLBAR-CHECKED   = SPACE.
 *  APPEND LS_TOOLBAR TO E_OBJECT->MT_TOOLBAR.
-
-* Normal Button
+*
+** Normal Button
 *  CLEAR LS_TOOLBAR.
 *  LS_TOOLBAR-FUNCTION  = 'B_LIST'.
 *  LS_TOOLBAR-ICON      = ICON_BIW_REPORT_VIEW.
@@ -592,13 +695,13 @@ ENDFORM.                    "ALV_BEFORE_USER_COMMAND
 *----------------------------------------------------------------------*
 FORM FRM_ALV_USER_COMMAND USING P_GRID_NM
                             E_UCOMM LIKE SY-UCOMM.
-*  BREAK SUNHM.
-*  CASE E_UCOMM .
-*    WHEN 'B_LIST'.
+  BREAK SUNHM.
+  CASE E_UCOMM .
+    WHEN 'B_LIST'.
 *      CALL METHOD GO_OOALV->MT_REFRESH_OO_ALV.
 *    WHEN 'DUMMY'.
 *    WHEN OTHERS.
-*  ENDCASE.
+  ENDCASE.
 
 ENDFORM.                    "ALV_USER_COMMAND
 *&---------------------------------------------------------------------*
@@ -637,8 +740,8 @@ FORM FRM_ALV_BUTTON_CLICK USING P_GRID_NAME
 *  LS_FCAT-STYLE = CL_GUI_ALV_GRID=>MC_STYLE_BUTTON.
 *  LS_FCAT-REPTEXT = 'Button'.
 *  <Botton Parameters--end>
-*  DATA: LS_OUT TYPE TY_OUT.
-*  READ TABLE GT_OUT INTO LS_OUT INDEX PS_ROW_NO-ROW_ID .
+  DATA: LS_OUT TYPE TY_OUT.
+  READ TABLE GT_OUT INTO LS_OUT INDEX PS_ROW_NO-ROW_ID .
 
 
 ENDFORM.                    "ALV_BUTTON_CLICK
@@ -662,18 +765,18 @@ FORM FRM_ALV_CONTEXT_MENU USING P_GRID_NAME
 *      status  = 'CONTEXT_MENUS'"定义的上下文菜单id
 *      menu    = P_OBJECT.
 *
-*
-*  "N个菜单就调用N次method.
-*  CALL METHOD P_OBJECT->ADD_FUNCTION
-*    EXPORTING
-*      FCODE = '&DEL1'
-*      TEXT  = '删除1'.
-*
-*  "N个菜单就调用N次method.
-*  CALL METHOD P_OBJECT->ADD_FUNCTION
-*    EXPORTING
-*      FCODE = '&DEL2'
-*      TEXT  = '删除2'.
+
+  "N个菜单就调用N次method.
+  CALL METHOD P_OBJECT->ADD_FUNCTION
+    EXPORTING
+      FCODE = '&DEL1'
+      TEXT  = '删除1'.
+
+  "N个菜单就调用N次method.
+  CALL METHOD P_OBJECT->ADD_FUNCTION
+    EXPORTING
+      FCODE = '&DEL2'
+      TEXT  = '删除2'.
 
 
 ENDFORM.                    "ALV_BUTTON_CLICK
@@ -690,60 +793,12 @@ FORM FRM_ALV_MENU_BUTTON USING P_GRID_NAME
                             E_UCOMM LIKE SY-UCOMM
                             .
 
-*  IF E_UCOMM = 'B_LIST'.
-*    CALL METHOD P_OBJECT->ADD_FUNCTION
-*      EXPORTING
-*        ICON  = ICON_DISPLAY
-*        FCODE = 'B_SUM'
-*        TEXT  = '显示 ALV 总数'.
-*  ENDIF.
+  IF E_UCOMM = 'B_LIST'.
+    CALL METHOD P_OBJECT->ADD_FUNCTION
+      EXPORTING
+        ICON  = ICON_DISPLAY
+        FCODE = 'B_SUM'
+        TEXT  = '显示 ALV 总数'.
+  ENDIF.
 
 ENDFORM.                    "ALV_BUTTON_CLICK
-**&---------------------------------------------------------------------*
-**&      Form  SUB_SEARCH_HELP_VRTNR
-**&---------------------------------------------------------------------*
-**       text
-**----------------------------------------------------------------------*
-*FORM SUB_SEARCH_HELP_PLANETYPE  USING  LV_FIELD TYPE DYNFNAM .
-*  REFRESH GT_SAPLANE.
-*  SELECT *
-*    FROM SAPLANE
-*    INTO TABLE GT_SAPLANE.
-*  CALL FUNCTION 'F4IF_INT_TABLE_VALUE_REQUEST'
-*    EXPORTING
-*      RETFIELD     = 'PLANETYPE'
-*      DYNPPROG     = SY-REPID
-*      DYNPNR       = SY-DYNNR
-*      DYNPROFIELD  = LV_FIELD
-**     STEPL        = 0
-*      WINDOW_TITLE = '飞机类型'
-*      VALUE_ORG    = 'S'
-*    TABLES
-*      VALUE_TAB    = GT_SAPLANE.
-*ENDFORM.                    "SUB_SEARCH_HELP_PLANETYPE
-*
-**&---------------------------------------------------------------------*
-**&      Form  SUB_SEARCH_HELP_ALVDEafult
-**&---------------------------------------------------------------------*
-**       text
-**----------------------------------------------------------------------*
-*FORM SUB_SEARCH_HELP_ALVDEAFULT.
-*
-*  GS_VARIANT-REPORT = SY-CPROG.
-*
-*  CALL FUNCTION 'REUSE_ALV_VARIANT_F4'
-*    EXPORTING
-*      IS_VARIANT = GS_VARIANT
-*      I_SAVE     = 'A'
-*    IMPORTING
-*      ES_VARIANT = GS_VARIANT
-*    EXCEPTIONS
-*      NOT_FOUND  = 2.
-*  IF SY-SUBRC = 2.
-*    MESSAGE ID SY-MSGID TYPE 'S' NUMBER SY-MSGNO
-*            WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
-*  ELSE.
-*    ALV_DEF = GS_VARIANT-VARIANT.
-*  ENDIF.
-*
-*ENDFORM.                    "SUB_SEARCH_HELP_ALVDEafult

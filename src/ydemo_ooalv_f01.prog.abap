@@ -176,37 +176,21 @@ FORM FRM_CREATE_ALV.
     EXPORTING
       I_PARENT = GO_CONT.
 
-* ###
-  CREATE OBJECT GO_EVT_REC
-    EXPORTING
-      E_OBJECT_TEXT = 'GO_GRID'.
 
-  SET HANDLER GO_EVT_REC->ZIF_CM_OOALV_EVENT~HANDLE_DATA_CHANGED                 FOR GO_GRID.
-  SET HANDLER GO_EVT_REC->ZIF_CM_OOALV_EVENT~HANDLE_DATA_CHANGED_FINISHED        FOR GO_GRID.
-  SET HANDLER GO_EVT_REC->ZIF_CM_OOALV_EVENT~HANDLE_DOUBLE_CLICK                 FOR GO_GRID.
-  SET HANDLER GO_EVT_REC->ZIF_CM_OOALV_EVENT~HANDLE_HOTSPOT_CLICK                FOR GO_GRID.
-  SET HANDLER GO_EVT_REC->ZIF_CM_OOALV_EVENT~PRINT_TOP_OF_PAGE                   FOR GO_GRID.
-
-  PERFORM REGISTER_F4_PBO CHANGING GO_GRID.
-  SET HANDLER GO_EVT_REC->ZIF_CM_OOALV_EVENT~HANDLE_ON_F4                        FOR GO_GRID.
-
-  SET HANDLER GO_EVT_REC->ZIF_CM_OOALV_EVENT~HANDLE_TOOLBAR                      FOR GO_GRID.
-  SET HANDLER GO_EVT_REC->ZIF_CM_OOALV_EVENT~HANDLE_BEFORE_USER_COMMAND          FOR GO_GRID.
-  SET HANDLER GO_EVT_REC->ZIF_CM_OOALV_EVENT~HANDLE_USER_COMMAND                 FOR GO_GRID.
-  SET HANDLER GO_EVT_REC->ZIF_CM_OOALV_EVENT~HANDLE_AFTER_USER_COMMAND           FOR GO_GRID.
-  SET HANDLER GO_EVT_REC->ZIF_CM_OOALV_EVENT~HANDLE_BUTTON_CLICK                 FOR GO_GRID.
-  SET HANDLER GO_EVT_REC->ZIF_CM_OOALV_EVENT~HANDLE_CONTEXT_MENU                 FOR GO_GRID.
-  SET HANDLER GO_EVT_REC->ZIF_CM_OOALV_EVENT~HANDLE_MENU_BUTTON                  FOR GO_GRID.
-*
-**则只有执行下一操作时才会触发handle_data_changed，比如点保存、删除
-*    CALL METHOD g_alv_grid->register_edit_event
-*      EXPORTING
-*        i_event_id = cl_gui_alv_grid=>mc_evt_modified.
-*
-*    CALL METHOD g_alv_grid->register_edit_event
-*      EXPORTING
-*        i_event_id = cl_gui_alv_grid=>mc_evt_enter.
-
+*  "事件响应
+*  CREATE OBJECT GO_EVT_REC
+*    EXPORTING
+*      IO_ALV                        = GO_GRID
+*      I_DATACHANGED_FORM            = 'I_DATACHANGED_FORM'
+*      I_DATACHANGED_FINISHED_FORM   = 'I_DATACHANGED_FINISHED_FORM'
+*      I_DOUBLE_CLICK_FORM           = 'I_DOUBLE_CLICK_FORM'
+*      I_HOTSPOT_FORM                = 'I_HOTSPOT_FORM'
+*      I_F4_FORM                     = 'I_F4_FORM'
+*      I_TOOLBAR_FORM                = 'I_TOOLBAR_FORM'
+*      I_BEFORE_UCOMM_FORM           = 'I_BEFORE_UCOMM_FORM'
+*      I_USER_COMMAND_FORM           = 'I_USER_COMMAND_FORM'
+*      I_BUTTON_CLICK_FORM           = 'I_BUTTON_CLICK_FORM'
+*      .
 
 * LAYOUT
   PERFORM FRM_ALV_LAYOUT_INIT CHANGING GS_LAYOUT.      "EDIT, COLOR
@@ -225,5 +209,133 @@ FORM FRM_CREATE_ALV.
       IT_OUTTAB            = GT_OUT[]
       IT_FIELDCATALOG      = GT_FCAT[].
 
+  GO_GRID->REGISTER_EDIT_EVENT( EXPORTING I_EVENT_ID = CL_GUI_ALV_GRID=>MC_EVT_MODIFIED ).
 
 ENDFORM.                    "frm_create_alv
+
+*&---------------------------------------------------------------------*
+*&      Form  ALV_RELOAD
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+FORM FRM_ALV_FREE.
+
+  IF GO_GRID IS NOT INITIAL.
+    CALL METHOD GO_GRID->FREE.
+  ENDIF.
+
+  IF GO_GUI_CONT IS NOT INITIAL.
+    CALL METHOD GO_GUI_CONT->FREE.
+  ENDIF.
+
+  IF GO_CONT IS NOT INITIAL.
+    CALL METHOD GO_CONT->FREE.
+  ENDIF.
+
+  IF GO_EDITOR IS NOT INITIAL.
+    CALL METHOD GO_EDITOR->FREE.
+  ENDIF.
+  IF GO_EVT_REC IS NOT INITIAL.
+*    CALL METHOD GO_EVT_REC->FREE.
+  ENDIF.
+
+  CLEAR: GO_GUI_CONT,
+         GO_CONT,
+         GO_EDITOR,
+         GO_EVT_REC,
+         GO_GRID.
+
+  CALL METHOD CL_GUI_CFW=>FLUSH.
+
+ENDFORM.                    "ALV_RELOAD
+*&---------------------------------------------------------------------*
+*&      Form  ALV_LAYOUT_INIT
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->P_EDIT     text
+*      -->P_COLOR    text
+*      -->PS_LAYOUT  text
+*----------------------------------------------------------------------*
+FORM FRM_ALV_LAYOUT_INIT CHANGING PS_LAYOUT TYPE LVC_S_LAYO.
+
+  CLEAR PS_LAYOUT.
+
+*  PS_LAYOUT-DETAILINIT = 'X'.        "Detail## NULL### ###
+  PS_LAYOUT-SEL_MODE   = 'D'.        "Selection mode(A,B,C,D)
+*  PS_LAYOUT-NO_ROWINS  = 'X'.
+*  PS_LAYOUT-NO_ROWMOVE = 'X'.
+*  PS_LAYOUT-SMALLTITLE = 'X'.
+  PS_LAYOUT-ZEBRA = 'X'.
+*  PS_LAYOUT-STYLEFNAME = 'CELLTAB'.  "Input/Output ##
+*  PS_LAYOUT-CTAB_FNAME = 'CELLCOL'.  "Color ##
+*
+*
+*  PS_LAYOUT-INFO_FNAME = 'CELLINF'.    "### ##
+
+  GS_VARIANT-REPORT    = SY-REPID.    "Default Variant Set
+
+
+*
+*  IF PS_LAYOUT-NO_TOOLBAR = ''.
+*    PERFORM ALV_EX_TOOLBAR USING 'GT_EXCLUDE'.
+*  ENDIF.
+
+
+ENDFORM.                    "ALV_LAYOUT_INIT
+*&---------------------------------------------------------------------*
+*&      Form  ALV_REFRESH
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->PO_GRID    text
+*      -->PT_FCAT    text
+*      -->P_GB       text
+*----------------------------------------------------------------------*
+FORM FRM_ALV_REFRESH USING PO_GRID TYPE REF TO CL_GUI_ALV_GRID
+                       PT_FCAT TYPE LVC_T_FCAT
+                       P_GB.
+
+  DATA: LS_STBL TYPE LVC_S_STBL,
+        L_SOFT_REFRESH.
+
+* Fieldcat ### ##### ### ##
+  CASE P_GB.
+    WHEN 'F' OR 'A'.
+      CALL METHOD PO_GRID->SET_FRONTEND_FIELDCATALOG
+        EXPORTING
+          IT_FIELDCATALOG = PT_FCAT[].
+      CALL METHOD PO_GRID->SET_FRONTEND_LAYOUT
+        EXPORTING
+          IS_LAYOUT = GS_LAYOUT.
+  ENDCASE.
+
+* Sort, SUMMARY## REFRESH
+  CASE P_GB.
+    WHEN 'S' OR 'A'.
+      L_SOFT_REFRESH = ''.
+    WHEN OTHERS.
+      L_SOFT_REFRESH = 'X'.
+  ENDCASE.
+
+  LS_STBL-ROW = 'X'.
+  LS_STBL-COL = 'X'.
+
+  CALL METHOD PO_GRID->REFRESH_TABLE_DISPLAY
+    EXPORTING
+      IS_STABLE      = LS_STBL
+      I_SOFT_REFRESH = L_SOFT_REFRESH.
+
+
+ENDFORM.                    "ALV_REFRESH
+*&---------------------------------------------------------------------*
+*&      Form  ALV_RELOAD
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+FORM FRM_ALV_RELOAD.
+
+  PERFORM FRM_ALV_REFRESH USING GO_GRID GT_FCAT[] 'F'.
+** CALL METHOD CL_GUI_CFW=>FLUSH.
+
+ENDFORM.                    "ALV_RELOAD

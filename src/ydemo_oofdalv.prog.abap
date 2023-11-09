@@ -367,7 +367,7 @@ ENDFORM.                    " FRM_SHOW_ALV
 *&
 *&---------------------------------------------------------------------*
 MODULE STATUS_9000 OUTPUT.
-  SET PF-STATUS 'STATUS'.
+  SET PF-STATUS 'MAIN'.
   SET TITLEBAR 'TITLE'.
 ENDMODULE.                    "status_9000 OUTPUT
 *&---------------------------------------------------------------------*
@@ -380,7 +380,7 @@ MODULE USER_COMMAND_9000 INPUT.
     WHEN 'EXIT' OR 'BACK'.
 *      CALL METHOD GO_OOALV->FREE.
       LEAVE TO SCREEN 0.
-    WHEN  'CANC'.
+    WHEN  'CANCEL'.
       LEAVE PROGRAM.
     WHEN OTHERS.
   ENDCASE.

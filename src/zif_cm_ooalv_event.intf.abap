@@ -15,6 +15,8 @@ interface ZIF_CM_OOALV_EVENT
   data BUTTON_CLICK_FORM type STRING .
   data CONTEXT_MENU_FORM type STRING .
   data MENU_BUTTON_FORM type STRING .
+  data ALV_DRAG_FORM type STRING .
+  data ALV_DROP_FORM type STRING .
 
   methods HANDLE_DATA_CHANGED
     for event DATA_CHANGED of CL_GUI_ALV_GRID
@@ -86,5 +88,19 @@ interface ZIF_CM_OOALV_EVENT
     importing
       !E_OBJECT
       !E_UCOMM .
+  methods HANDLE_ALV_ONDRAG default fail
+    for event ONDRAG of CL_GUI_ALV_GRID
+    importing
+      !E_ROW
+      !E_COLUMN
+      !ES_ROW_NO
+      !E_DRAGDROPOBJ .
+  methods HANDLE_ALV_ONDROP
+    for event ONDROP of CL_GUI_ALV_GRID
+    importing
+      !E_ROW
+      !E_COLUMN
+      !ES_ROW_NO
+      !E_DRAGDROPOBJ .
   methods FREE .
 endinterface.

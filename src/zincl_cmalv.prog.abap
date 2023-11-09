@@ -212,6 +212,25 @@ FORM FRM_GET_SELECTED_CELLS  CHANGING ET_CELL TYPE LVC_T_CELL.
   ENDIF.
 ENDFORM.                    " FRM_GET_SELECTED_CELLS
 *&---------------------------------------------------------------------*
+*&      Form  FRM_GET_SELECTED_CELLS
+*&---------------------------------------------------------------------*
+*       取选中的单元格
+*----------------------------------------------------------------------*
+*      <--ET_CELL  text
+*----------------------------------------------------------------------*
+FORM FRM_GET_SELECTED_ROWS  CHANGING ET_ROW TYPE LVC_T_ROID.
+  DATA: LR_ALV TYPE REF TO CL_GUI_ALV_GRID.
+
+* 获取ALV instance
+  PERFORM FRM_GET_ALV_INSTANCE CHANGING LR_ALV.
+* 获取被筛选的条目
+  IF LR_ALV IS NOT INITIAL.
+    CALL METHOD LR_ALV->GET_SELECTED_ROWS
+      IMPORTING
+        ET_ROW_NO = ET_ROW.
+  ENDIF.
+ENDFORM.                    " FRM_GET_SELECTED_CELLS
+*&---------------------------------------------------------------------*
 *&      Form  FRM_CHANGED_DATA_TO_TABLE
 *&---------------------------------------------------------------------*
 *       将修改的值保存到内表

@@ -7,8 +7,8 @@
 *&---------------------------------------------------------------------*
 REPORT YDEMO_OOALV MESSAGE-ID YOALV.
 
-INCLUDE YDEMO_OOALV_TOP.    " global Data
-INCLUDE YDEMO_OOALV_ALV."OO Event AVL Defined
+
+INCLUDE YDEMO_OOALV_TOP."TOP
 INCLUDE YDEMO_OOALV_I01."PAI Moudle
 INCLUDE YDEMO_OOALV_O01."PBO Moudle
 INCLUDE YDEMO_OOALV_F01."
